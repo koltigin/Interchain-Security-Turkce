@@ -7,88 +7,90 @@
 [![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=cosmos_interchain-security&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=cosmos_interchain-security)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=cosmos_interchain-security&metric=coverage)](https://sonarcloud.io/summary/new_code?id=cosmos_interchain-security)
 
-**interchain-security** houses the code for implementing Interchain Security. The repo is currently a WIP and targetting v1 of Interchain Security. For more details on the Interchain Security protocol, take a look at the [specification](https://github.com/cosmos/ibc/blob/main/spec/app/ics-028-cross-chain-validation/README.md).
+**Zincirler arası güvenlik (ICS)**, zincirler arası güvenliğin uygulanması için kod barındırır. Repo şu anda bir WIP ve zincirler arası güvenliğin V1'i hedefliyor. Zincirler Arası Güvenlik Protokolü hakkında daha fazla bilgi için [spesifikasyona](https://github.com/cosmos/ibc/blob/main/spec/app/ics-028-cross-chain-validation/README.md) bir göz atın.
 
-CCV stands for cross chain validation and refers to the subset of Interchain Security related to the staking and slashing communication between the provider and consumer blockchains. The provider blockchain communicates staking changes to consumer blockchain(s), while the consumer blockchain may communicate slashing evidence to the provider blockchain.
+CCV, zincirler arası validasyon anlamına gelir ve sağlayıcı ve tüketici blok zincirleri arasındaki staking ve slashing (ceza kesme) iletişimiyle ilgili olarak zincirler arası güvenliğin alt kümesini ifade eder. Sağlayıcı blockchain, tüketici blockchain(ler)'de yapılan değişiklikleri iletirken, tüketici blockchain, sağlayıcı blok zincirine kesintiye uğramış kanıtlar iletebilir.
 
 The code for CCV is housed under [x/ccv](./x/ccv). The `types` folder contains types and related functions that are used by both provider and consumer chains, while the `consumer` module contains the code run by consumer chains and the `provider` module contains the code run by provider chain.
 
-## Instructions
+CCV kodu x/ccv altında bulunur. `Tipler` klasörü, hem sağlayıcı hem de tüketici zincirleri tarafından kullanılan tipleri ve ilgili işlevleri içerirken, `tüketici` modülü tüketici zincirleri tarafından çalıştırılan kodu içerir ve `sağlayıcı` (provider) modülü, sağlayıcı zinciri tarafından çalıştırılan kodu içerir.
 
-**Prerequisites**
+## Yönergeler
+
+**Önkoşullar**
 
 ```bash
-## For OSX or Linux
+## OSX ya da Linux için
 
 # go 1.18 (https://formulae.brew.sh/formula/go)
 brew install go@1.18
-# jq (optional, for testnet) (https://formulae.brew.sh/formula/jq)
+# jq (opsiyonel, testnet için) (https://formulae.brew.sh/formula/jq)
 brew install jq
-# docker (optional, for integration tests, testnet) (https://docs.docker.com/get-docker/)
+# docker (opsiyonel, integrasyon testleri için, testnet) (https://docs.docker.com/get-docker/)
 
 ```
 
-**Installing and running binaries**
+**Binary Dosyalarını Yükleme ve Çalıştırma**
 
 ```bash
-# install interchain-security-pd and interchain-security-cd binaries
+# interchain-security-pd ve interchain-security-cd binary dosyalarını yükleme
 make install
-# run provider
+# sağlayıcıyı çalıştırma
 interchain-security-pd
-# run consumer
+# tüketiciyi çalıştırma
 interchain-security-cd
-# (if the above fail, ensure ~/go/bin on $PATH)
+# (Yukarıdakiler başarısız olursa, ~/go/bin $PATH yolunu sağlayın)
 export PATH=$PATH:$(go env GOPATH)/bin
 ```
 
-Inspect the [Makefile](./Makefile) if curious.
+Merak ediyorsanız [Makefile] (./Makefile) denetleyin.
 
-## Testing
+## Test Etme
 
-### Unit Tests
+### Birim Testleri
 
-Unit tests are useful for simple standalone functionality, and CRUD operations. Unit tests should use golang's standard testing package, and be defined in files formatted as ```<file being tested>_test.go``` in the same directory as the file being tested, following standard conventions. 
+Birim testleri basit bağımsız işlevsellik ve CRUD işlemleri için kullanışlıdır. Birim testleri golang'ın standart test paketini kullanmalı ve ```<file being tested>_test.go``` olarak biçimlendirilmiş dosyalarda tanımlanmalıdır.
 
-[Mocked external keepers](./testutil/keeper/mocks.go) (implemented with [gomock](https://github.com/golang/mock)) are available for testing more complex functionality, but still only relevant to execution within a single node. Ie. no internode or interchain communication. 
+[Mocked external keepers](./testutil/keeper/mocks.go) ([gomock](https://github.com/golang/mock)) ile uygulanan daha karmaşık işlevselliği test etmek için mevcuttur, ancak yine de yalnızca tek bir düğümdeki yürütme ile ilgilidir. Yani Internode ya da zincirler arası iletişim yok.
 
-### End to End (e2e) Tests
+### Uçtan Uca (e2e) Testler
 
-[e2e-tests](./e2e-tests/) utilize the [IBC Testing Package](https://github.com/cosmos/ibc-go/tree/main/testing), and test functionality that is wider in scope than a unit test, but still able to be validated in-memory. Ie. code where advancing blocks would be useful, simulated handshakes, simulated packet relays, etc. 
+[Uçtan uca testler](./e2e-tests/) [IBC test paketini](https://github.com/cosmos/ibc-go/tree/main/testing) kullanır ve bir birim testinden daha geniş olan, ancak yine de bellek içinde valide edilebilir. Yani  Gelişen blokların yararlı olacağı kod, simüle edilmiş handshake'ler, simüle edilmiş paket röleleri vb. 
 
-### Differential Tests (WIP)
+### Diferansiyel Testler (WIP)
 
-Similar to e2e tests, but they compare the system state to an expected state generated from a model implementation.
+Uçtan uca testler (e2e) testlerine benzer şekilde ancak sistem durumunu bir model uygulamasından üretilen beklenen bir durumla karşılaştırırlar.
 
-### Integration Tests 
+### Entegrasyon Testleri
 
-[Integration tests](./integration-tests/) run true consumer and provider chain binaries within a docker container and are relevant to the highest level of functionality. Integration tests use queries/transactions invoked from CLI to drive and validate the code.
+[Entegrasyon testleri](./integration-tests/) bir Docker konteyneri içinde gerçek tüketici ve sağlayıcı zincir binary dosyalarını çalıştırır ve en üst düzey işlevsellik ile ilgilidir. Entegrasyon testleri, kodu sürmek ve doğrulamak için CLI'den çağrılan sorguları/işlemleri kullanır.
 
-### Running Tests
+### Testleri Çalıştırma
 
 ```bash
-# run all static analysis, unit, e2e, and integration tests using make
+# make kullanarak tüm statik analiz, birim, E2E ve entegrasyon testlerini çalıştırın
 TODO
-# run all unit and e2e tests using make
+# make kullanarak tüm birim ve E2E testlerini çalıştırın
 make test
-# run all unit and e2e tests using go
+# go kullanarak tüm birim ve E2E testlerini çalıştırın
 go test ./...
-# run all unit and e2e tests with verbose output
+# tüm birim ve E2E testlerini ayrıntılı çıktı ile çalıştırın
 go test -v ./..
-# run all unit and e2e tests with coverage stats
+# tüm birim ve E2E testlerini kapsam istatistikleri ile çalıştırın
 go test -cover ./..
-# run a single unit test
+# tek bir birim testi çalıştırın
 go test -run <unit-test-name> path/to/package
-# example: run a single unit test
+# örnek: tek bir birim testi çalıştırın
 go test -run TestSlashAcks ./x/ccv/provider/keeper
-# run a single e2e test
+# tek bir e2e testi çalıştırın
 go test -run <test-suite-name>/<test-name> ./...
-# example: run a single e2e test
+# örnek: tek bir e2e testi çalıştırın
 go test -run TestProviderTestSuite/TestPacketRoundtrip ./...
-# run all integration tests
+# tüm entegrasyon testlerini çalıştırın
 go run ./integration-tests/...
-# run all integration tests with a local cosmos sdk
+# local bir cosmos sdk ile tüm entegrasyon testlerini çalıştırın 
 go run ./integration-tests/... --local-sdk-path "/Users/bob/Documents/cosmos-sdk/"
-# run golang native fuzz tests (https://go.dev/doc/tutorial/fuzz)
+# golang native fuzz testlerini çalıştırın (https://go.dev/doc/tutorial/fuzz)
 go test -fuzz=<regex-to-match-test-name>
 ```
 
