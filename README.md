@@ -94,21 +94,21 @@ go run ./integration-tests/... --local-sdk-path "/Users/bob/Documents/cosmos-sdk
 go test -fuzz=<regex-to-match-test-name>
 ```
 
-### Linters and Static Analysis
+### Linterler ve Statik Analiz
 
-Several analyzers are used on the code including [CodeQL](https://codeql.github.com/), [SonarCloud](https://sonarcloud.io/), [golangci-lint](https://golangci-lint.run/) and [gosec](https://github.com/securego/gosec). Some of these are run on github when committing to PRs ect, but some tools are also applicable locally, and are built into golang.
+Kodda [CodeQL](https://codeql.github.com/), [SonarCloud](https://sonarcloud.io/), [golangci-lint](https://golangci-lint.run/) ve [gosec](https://github.com/securego/gosec) dahil olmak üzere birkaç analizör kullanılır. Bunlardan bazıları Prs ECT'yi taahhüt ederken GitHub'da çalıştırılır, ancak bazı araçlar da yerel olarak uygulanabilir ve Golang'a yerleştirilir.
 
 ```bash
-# gofmt to format and simplify code (https://pkg.go.dev/cmd/gofmt)
+# kodu biçimlendirmek ve basitleştirmek için gofmt (https://pkg.go.dev/cmd/gofmt)
 gofmt -w -s -e .
-# go vet to search for suspicious code (https://pkg.go.dev/cmd/vet)
+# şüpheli Kodu aramak için go vet (https://pkg.go.dev/cmd/vet)
 go vet ./...
 ```
 
-Some useful tools are included in the repository using [pre-commit](https://pre-commit.com/hooks.html). pre-commit lets you run developer tools either on every git commit, or manually with `pre-commit run --all-files`. See the [config](./.pre-commit-config.yaml) for details. In this repo the hooks are not installed to git, as that can be cumbersome, but it is still possible to benefit from them.
+Bazı kullanışlı araçlar, [pre-commit](https://pre-commit.com/hooks.html) kullanılarak depoya dahil edilir. pre-commit geliştirici araçlarını her git commit ya da `pre-commit run --all-files` ile manuel olarak çalıştırmanıza olanak tanır. Ayrıntılar için bakınız; [config](./.pre-commit-config.yaml). Bu repoda kancalar git'e yüklenmez, çünkü bu hantal olabilir, ancak yine de onlardan yararlanmak mümkündür.
 
 ```bash
-## Prerequisites
+## Önkoşullar
 
 # pre-commit
 brew install pre-commit
@@ -119,20 +119,20 @@ go install github.com/fzipp/gocyclo/cmd/gocyclo@latest
 # go-critic https://github.com/go-critic/go-critic
 go install github.com/go-critic/go-critic/cmd/gocritic@latest
 
-## Run the tools
+## Araşöarı çalıştırma
 
 pre-commit run --all-files
 ```
 
-### Debugging
+### Hata Ayıklama
 
-If using VSCode, see [vscode-go/wiki/debugging](https://github.com/golang/vscode-go/wiki/debugging) to debug unit tests or go binaries.
+VSCode kullanıyorsanız, birim testlerinde hata ayıklamak veya binary dosyalara gitmek için bkz. [vscode-go/wiki/debugging](https://github.com/golang/vscode-go/wiki/debugging)
 
-### More
+### Daha fazlası
 
-More instructions will be added soon, in time for the testnet.
+TestNet için zamanında daha fazla talimat eklenecektir.
 
-## Learn more
+## Daha Fazlasını Öğren
 
 - [IBC Docs](https://docs.cosmos.network/master/ibc/)
 - [IBC Protocol](https://ibcprotocol.org/)
